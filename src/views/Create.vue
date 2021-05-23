@@ -2,10 +2,7 @@
   <Layout>
     <template #content-left>
       <div class="px-4 px-md-0 mb-3">
-        <router-link
-          :to="{ name: domain ? 'home' : 'proposals' }"
-          class="text-gray"
-        >
+        <router-link :to="{ name: 'proposals' }" class="text-gray">
           <Icon name="back" size="22" class="v-align-middle" />
           {{ space.name }}
         </router-link>
@@ -172,7 +169,7 @@ export default {
     const store = useStore();
     const auth = getInstance();
 
-    const key = route.params.key;
+    const key = 'puddingswap.eth';
     const from = route.params.from;
 
     const loading = ref(false);
