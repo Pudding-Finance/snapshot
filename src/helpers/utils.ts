@@ -94,12 +94,12 @@ export function formatSpace(key, space) {
 export function filterProposals(space, proposal, tab) {
   const ts = (Date.now() / 1e3).toFixed();
   const members = space.members.map(address => address.toLowerCase());
-  const author = proposal[1].address.toLowerCase();
+  const author = proposal.author.toLowerCase();
   const isMember = members.includes(author);
-  const start = proposal[1].msg.payload.start;
-  const end = proposal[1].msg.payload.end;
+  const start = proposal.start;
+  const end = proposal.end;
 
-  if (!isMember && proposal[1].score < space.filters.minScore) return false;
+  if (!isMember && proposal.score < space.filters.minScore) return false;
   if (space.filters.onlyMembers && !isMember) return false;
 
   if (tab === 'all') return true;

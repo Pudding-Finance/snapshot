@@ -7,10 +7,7 @@
           <div class="d-flex flex-items-center flex-auto">
             <h2 class="mr-2">
               {{ $t('proposals.header') }}
-              <UiCounter
-                :counter="Object.keys(proposalsWithFilter).length"
-                class="ml-1"
-              />
+              <UiCounter :counter="totalProposals" class="ml-1" />
             </h2>
           </div>
         </div>
@@ -34,7 +31,14 @@
       </Block>
       <Block :slim="true">
         <div
-          class="px-4 py-3 bg-gray-dark overflow-auto menu-tabs rounded-top-0 rounded-md-top-2"
+          class="
+            px-4
+            py-3
+            bg-gray-dark
+            overflow-auto
+            menu-tabs
+            rounded-top-0 rounded-md-top-2
+          "
         >
           <router-link
             v-for="state in states"
@@ -48,17 +52,17 @@
         <RowLoading v-if="loading" class="border-top" />
         <div v-if="loaded">
           <RowProposal
-            v-for="(proposal, i) in proposalsWithFilter"
-            :key="i"
+            v-for="proposal in proposalsWithFilter"
+            :key="proposal.id"
             :proposal="proposal"
             :space="space"
             :verified="space.verified"
-            :i="i"
+            :i="proposal.id"
             class="border-top"
           />
         </div>
         <p
-          v-if="loaded && Object.keys(proposalsWithFilter).length === 0"
+          v-if="loaded && totalProposals === 0"
           class="p-4 m-0 border-top d-block"
         >
           {{ $t('proposals.noProposals') }}
@@ -77,7 +81,7 @@ export default {
     return {
       loading: false,
       loaded: false,
-      proposals: {},
+      proposals: [],
       tab: 'all'
     };
   },
@@ -102,15 +106,13 @@ export default {
         : states;
     },
     totalProposals() {
-      return Object.keys(this.proposals).length;
+      return this.proposals.length;
     },
     proposalsWithFilter() {
       if (this.totalProposals === 0) return {};
-      return Object.fromEntries(
-        Object.entries(this.proposals)
-          .filter(proposal => filterProposals(this.space, proposal, this.tab))
-          .sort((a, b) => b[1].msg.payload.end - a[1].msg.payload.end, 0)
-      );
+      return this.proposals
+        .filter(proposal => filterProposals(this.space, proposal, this.tab))
+        .sort((a, b) => b.end - a.end);
     },
     isMember() {
       const members = this.space.members.map(address => address.toLowerCase());

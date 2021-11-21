@@ -3,9 +3,12 @@ import { getScores } from '@snapshot-labs/snapshot.js/src/utils';
 import { formatProposals } from '@/helpers/utils';
 import { getProfiles } from '@/helpers/profile';
 import getProvider from '@snapshot-labs/snapshot.js/src/utils/provider';
-import client from '@/helpers/client';
 import { apolloClient } from '@/apollo';
-import { VOTES_QUERY, PROPOSAL_QUERY } from '@/helpers/queries';
+import {
+  VOTES_QUERY,
+  PROPOSAL_QUERY,
+  PROPOSALS_QUERY
+} from '@/helpers/queries';
 import { cloneDeep } from 'lodash';
 
 export async function getProposal(space, id) {
@@ -137,8 +140,15 @@ export async function getPower(space, address, proposal) {
 
 export async function getProposals(space) {
   try {
-    const proposals: any = await client.getProposals(space.key);
-    return formatProposals(proposals);
+    const resp: any = await apolloClient.query({
+      query: PROPOSALS_QUERY,
+      variables: {
+        space: space.key
+      }
+    });
+    console.log('proposals', resp.data.proposals);
+    return resp.data.proposals;
+    // return formatProposals(proposals);
   } catch (e) {
     console.log(e);
     return e;

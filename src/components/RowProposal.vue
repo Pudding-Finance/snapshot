@@ -6,18 +6,18 @@
     <div>
       <State :proposal="proposal" class="d-inline-block mr-2 mb-2" />
       <h3
-        v-text="_shorten(proposal.msg.payload.name, 'name')"
+        v-text="_shorten(proposal.title, 'name')"
         class="d-inline-block mb-1"
       />
     </div>
     <div>
       <span v-text="`#${i.slice(0, 7)}`" />
-      {{ $tc('createdBy', [_shorten(proposal.address)]) }}
-      <Badges :address="proposal.address" :members="space.members" />
+      {{ $tc('createdBy', [_shorten(proposal.author)]) }}
+      <Badges :address="proposal.author" :members="space.members" />
       {{
         $tc(period, [
-          _ms(proposal.msg.payload.start),
-          _ms(proposal.msg.payload.end)
+          _ms(proposal.start),
+          _ms(proposal.end)
         ])
       }}
     </div>
@@ -37,12 +37,12 @@ export default {
       return (
         Array.isArray(this.verified) &&
         this.verified.length > 0 &&
-        this.verified.includes(this.proposal.address)
+        this.verified.includes(this.proposal.author)
       );
     },
     period() {
       const ts = (Date.now() / 1e3).toFixed();
-      const { start, end } = this.proposal.msg.payload;
+      const { start, end } = this.proposal;
       if (ts > end) return 'endedAgo';
       if (ts > start) return 'endIn';
       return 'startIn';

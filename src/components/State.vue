@@ -10,7 +10,7 @@ export default {
   computed: {
     state() {
       const ts = (Date.now() / 1e3).toFixed();
-      const { start, end } = this.proposal.msg.payload;
+      const { start, end } = this.proposal;
       if (ts > end)
         return { name: this.$t('proposals.states.closed'), class: 'bg-purple' };
       if (ts > start)
